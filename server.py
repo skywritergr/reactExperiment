@@ -1,17 +1,9 @@
-# This file provided by Facebook is for non-commercial testing and evaluation
-# purposes only. Facebook reserves all rights not expressly granted.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 import json
 import os
 import time
+from urllib.request import Request, urlopen, URLError
 from flask import Flask, Response, request
+from requests_oauthlib import OAuth1Session
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
@@ -31,6 +23,24 @@ def comments_handler():
             file.write(json.dumps(comments, indent=4, separators=(',', ': ')))
 
     return Response(json.dumps(comments), mimetype='application/json', headers={'Cache-Control': 'no-cache'})
+    
+@app.route('/api/getTweets', methods=['GET'])
+def get_tweets():        
+    try:
+        # Load keys from external file. Not checked in.
+        with open('twitterKeys.json', 'r') as file:
+            keys = json.loads(file.read())
+        
+        twitter = OAuth1Session(keys['client'],
+                    client_secret=keys['client_secret'],
+                    resource_owner_key=keys['resource_owner_key'],
+                    resource_owner_secret=keys['resource_owner_secret'])
+        url = 'https://api.twitter.com/1.1/statuses/retweets_of_me.json'
+        res = twitter.get(url).json()
+
+        return Response(json.dumps(res), mimetype='application/json', headers={'Cache-Control': 'no-cache'})
+    except URLError as e:
+       return Response(e)
 
 if __name__ == '__main__':
     app.run(port=int(os.environ.get("PORT",3000)))
