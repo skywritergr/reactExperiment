@@ -5,7 +5,7 @@ from urllib.request import Request, urlopen, URLError
 from flask import Flask, Response, request
 from requests_oauthlib import OAuth1Session
 from pprint import pprint
-from server.tweet import Tweet
+from server.tweet import Retweet
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.config.update(
@@ -32,7 +32,7 @@ def comments_handler():
 def prepareTweets(results):
     tweetList = []
     for res in results:
-        tempTweet = Tweet(res['text'], res['id'], res['retweet_count'], res['user']['name'])
+        tempTweet = Retweet(res['text'], res['id'], res['retweet_count'], res['user']['name'])
         tweetList.append(tempTweet)
     return tweetList
     

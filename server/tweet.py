@@ -1,4 +1,4 @@
-class Tweet(object):
+class Retweet(object):
     text = ""
     id = 0
     retweet_count = 0
