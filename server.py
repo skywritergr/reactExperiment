@@ -4,7 +4,6 @@ import time
 from urllib.request import Request, urlopen, URLError
 from flask import Flask, Response, request
 from requests_oauthlib import OAuth1Session
-from pprint import pprint
 from server.tweet import Retweet
 
 app = Flask(__name__, static_url_path='', static_folder='public')
