@@ -7,7 +7,7 @@ var concat = require('gulp-concat');
 
 gulp.task('browserify', function() {
     var bundler = browserify({
-        entries: ['./public/js/main.js'], // Only need initial file, browserify finds the deps
+        entries: ['./public/js/render.js'], // Only need initial file, browserify finds the deps
         transform: [reactify], // We want to convert JSX to normal javascript
         debug: true, // Gives us sourcemapping
         cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify

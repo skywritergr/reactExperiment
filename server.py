@@ -31,7 +31,7 @@ def comments_handler():
 def prepareTweets(results):
     tweetList = []
     for res in results:
-        tempTweet = Retweet(res['text'], res['id'], res['retweet_count'], res['user']['name'])
+        tempTweet = Retweet(res['text'], res['id'], res['retweet_count'], res['user']['name'], res['user']['profile_image_url'])
         tweetList.append(tempTweet)
     return tweetList
     
